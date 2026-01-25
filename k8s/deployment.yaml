@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: mech-shopping
+    labels:
+        app: mech-shopping # Best practice: label the deployment itself too
+spec:
+    replicas: 3
+    selector:
+        matchLabels:
+            app: mech-shopping # This tells K8s to look for pods with this label
+    template:
+        metadata:
+            labels:
+                app: mech-shopping # THIS IS CRITICAL: The pod MUST have this label
+        spec:
+            containers:
+                - name: mech-shopping
+                  image: ${IMAGE_TAG}
+                  ports:
+                      - containerPort: 8070
+                  env:
+                      - name: JAVA_OPTS
+                        value: "-Xms128m -Xmx512m -Djava.security.egd=file:/dev/./urandom -Djava.io.tmpdir=/tmp"
+# Summary of Changes:
+# Added metadata.labels under template: This ensures the Pods created by this deployment are labeled app: mech-shopping.
+# Added metadata.labels under deployment (optional but recommended): Good for organization.
+# Without this label, Kubernetes will create the pods but immediately get confused because it can't find them to manage them, leading to errors.
