@@ -1,0 +1,10 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  # Expose port 8070 on the host to port 80 on the container (NodePort)
+  extraPortMappings:
+  - containerPort: 80
+    hostPort: 8070
+    listenAddress: "0.0.0.0"
+    protocol: TCP
